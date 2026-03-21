@@ -1,0 +1,114 @@
+backend/
+├── prisma/                          # Prisma ORM configuration [citation:4]
+│   ├── schema.prisma                 # Database schema definitions
+│   ├── migrations/                    # Migration history
+│   └── seed.ts                        # Database seed script
+│
+├── src/                              # Source code [citation:3]
+│   ├── config/                        # Configuration files
+│   │   ├── database.ts                 # Prisma client initialization
+│   │   ├── redis.ts                     # Redis connection setup
+│   │   ├── storage.ts                   # S3/Cloudflare R2 configuration
+│   │   ├── email.ts                      # Email service config (Resend/SendGrid)
+│   │   ├── socket.ts                      # Socket.io configuration
+│   │   └── constants.ts                    # App constants
+│   │
+│   ├── controllers/                    # Request handlers [citation:3][citation:7]
+│   │   ├── auth-controller.ts            # Register, login, logout
+│   │   ├── project-controller.ts          # CRUD operations for projects
+│   │   ├── chat-controller.ts              # Message handling
+│   │   ├── file-controller.ts               # File uploads
+│   │   ├── notification-controller.ts        # User notifications
+│   │   └── user-controller.ts                 # Profile management
+│   │
+│   ├── middleware/                      # Express middleware [citation:3][citation:7]
+│   │   ├── auth.ts                         # JWT authentication
+│   │   ├── validation.ts                    # Request validation
+│   │   ├── upload.ts                         # File upload middleware (Multer)
+│   │   ├── rate-limiter.ts                   # Rate limiting
+│   │   ├── error-handler.ts                   # Global error handler [citation:4]
+│   │   └── logger.ts                           # Request logging
+│   │
+│   ├── models/                           # TypeScript interfaces (mirroring Prisma)
+│   │   ├── user.model.ts
+│   │   ├── project.model.ts
+│   │   ├── chat.model.ts
+│   │   └── index.ts
+│   │
+│   ├── routes/                           # API route definitions [citation:3][citation:7]
+│   │   └── v1/                             # API versioning
+│   │       ├── auth-routes.ts
+│   │       ├── project-routes.ts
+│   │       ├── chat-routes.ts
+│   │       ├── file-routes.ts
+│   │       ├── notification-routes.ts
+│   │       ├── user-routes.ts
+│   │       └── index.ts                      # Route aggregator
+│   │
+│   ├── services/                         # Business logic layer [citation:3][citation:7]
+│   │   ├── auth-service.ts                  # Password hashing, token generation
+│   │   ├── project-service.ts                # Project CRUD logic
+│   │   ├── chat-service.ts                    # Message persistence
+│   │   ├── file-service.ts                     # S3 file operations
+│   │   ├── notification-service.ts              # In-app notifications
+│   │   ├── email-service.ts                      # Email sending
+│   │   └── activity-service.ts                    # Activity logging
+│   │
+│   ├── utils/                             # Helper functions [citation:3][citation:7]
+│   │   ├── logger.ts                         # Winston logging
+│   │   ├── response-utils.ts                   # Standardized API responses [citation:4]
+│   │   ├── token-generator.ts                    # JWT helpers
+│   │   ├── validators.ts                          # Input validation schemas
+│   │   └── helpers.ts                              # General utilities
+│   │
+│   ├── jobs/                               # Background jobs (BullMQ)
+│   │   ├── email-queue.ts                    # Email queue
+│   │   └── processors/                         # Job processors
+│   │       ├── welcome-email.ts
+│   │       └── notification-processor.ts
+│   │
+│   ├── types/                              # TypeScript type definitions
+│   │   ├── express.d.ts                      # Extended Express Request type
+│   │   ├── socket.d.ts                        # Socket.io types
+│   │   └── environment.d.ts                    # Environment variables
+│   │
+│   ├── app.ts                               # Express app configuration [citation:3]
+│   └── server.ts                             # Server entry point [citation:3]
+│
+├── tests/                               # Test files
+│   ├── unit/
+│   ├── integration/
+│   └── fixtures/
+│
+├── .env                                   # Environment variables (git-ignored)
+├── .env.example                           # Example environment variables
+├── .gitignore
+├── package.json                           # Backend dependencies
+├── tsconfig.json                          # TypeScript configuration
+└── README.md
+
+
+
+cd C:\portfolio-platform\backend
+
+REM Create directories one by one
+mkdir src
+cd src
+mkdir config
+mkdir controllers
+mkdir middleware
+mkdir models
+mkdir routes
+mkdir services
+mkdir utils
+mkdir jobs
+mkdir types
+cd ..
+
+mkdir prisma
+mkdir tests
+
+REM Create routes\v1 subdirectory
+cd src\routes
+mkdir v1
+cd ..\..
