@@ -4,14 +4,12 @@
   "type": "module",
   "description": "Backend API for Portfolio Platform",
   "main": "src/index.js",
- 
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "postinstall": "./node_modules/.bin/prisma generate",
-    "build": "echo 'No build step needed'"
-  }
-,
+    "postinstall": "node node_modules/prisma/build/index.js generate",
+    "build": "echo 'No build step needed for JavaScript'"
+  },
   "dependencies": {
     "@prisma/client": "^6.0.0",
     "@sendgrid/mail": "^8.1.6",
