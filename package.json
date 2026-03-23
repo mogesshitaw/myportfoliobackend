@@ -4,18 +4,15 @@
   "type": "module",
   "description": "Backend API for Portfolio Platform",
   "main": "src/index.js",
-"scripts": {
-
-  "dev": "nodemon src/index.js",
-  "start": "node src/index.js",
-  "postinstall": "prisma generate"
-
-},
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "postinstall": "npx prisma generate",
+    "build": "echo 'No build step needed for JavaScript'"
+  },
   "dependencies": {
     "@prisma/client": "^6.0.0",
     "@sendgrid/mail": "^8.1.6",
-    "bcrypt": "^6.0.0",
-     "prisma": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.6",
@@ -25,11 +22,11 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.1.1",
     "nodemailer": "^8.0.2",
+    "prisma": "^6.0.0",
     "sharp": "^0.34.5",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.6",
     "@types/cors": "^2.8.17",
@@ -41,9 +38,11 @@
     "@types/sharp": "^0.31.1",
     "@types/uuid": "^10.0.0",
     "nodemon": "^3.1.14",
-   
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
