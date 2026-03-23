@@ -5,17 +5,15 @@
   "description": "Backend API for Portfolio Platform",
   "main": "src/index.js",
 "scripts": {
-  "dev": "nodemon --exec tsx src/index.js",
-  "build": "tsc",
+
+  "dev": "nodemon src/index.js",
   "start": "node src/index.js",
-  "migrate": "prisma migrate deploy",
-  "seed": "prisma db seed",
   "postinstall": "prisma generate"
+
 },
   "dependencies": {
     "@prisma/client": "^6.0.0",
     "@sendgrid/mail": "^8.1.6",
-     "prisma": "^6.0.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
@@ -42,6 +40,7 @@
     "@types/sharp": "^0.31.1",
     "@types/uuid": "^10.0.0",
     "nodemon": "^3.1.14",
+    "prisma": "^6.0.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
