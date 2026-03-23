@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -58,6 +59,7 @@ model Project {
   comments    Comment[]
   likes       Like[]
 }
+
 model Comment {
   id        String   @id @default(uuid())
   content   String
@@ -92,7 +94,7 @@ model Notification {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   projectId String?
 }
-// prisma/schema.prisma
+
 model Testimonial {
   id        String   @id @default(cuid())
   author    String
@@ -109,6 +111,7 @@ model Testimonial {
   
   @@map("testimonials")
 }
+
 model Contact {
   id        String   @id @default(cuid())
   name      String
