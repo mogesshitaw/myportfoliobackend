@@ -1,9 +1,8 @@
-import type { Request, Response } from "express"
-import { prisma } from "../index.ts"
+import { prisma } from "../index.js"
 import bcrypt from 'bcryptjs'
 
 // Get all users (admin only)
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany({
       select: {
@@ -35,7 +34,7 @@ export const getUsers = async (req: Request, res: Response) => {
 }
 
 // Get user by ID (admin only)
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (req, res) => {
   try {
     const { id } = req.params
 
@@ -82,7 +81,7 @@ export const getUserById = async (req: Request, res: Response) => {
 }
 
 // Create user (admin only)
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req, res) => {
   try {
     const { email, fullName, password, role = "client" } = req.body
 
@@ -134,7 +133,7 @@ export const createUser = async (req: Request, res: Response) => {
 }
 
 // Update user (admin only)
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req, res) => {
   try {
     const { id } = req.params
     const { fullName, role } = req.body
@@ -169,7 +168,7 @@ export const updateUser = async (req: Request, res: Response) => {
 }
 
 // ✅ ተጠቃሚ ማጥፋት/ማብራት (Toggle user active status)
-export const toggleUserStatus = async (req: Request, res: Response) => {
+export const toggleUserStatus = async (req, res) => {
   try {
     const { id } = req.params
     const { isActive } = req.body
@@ -217,7 +216,7 @@ export const toggleUserStatus = async (req: Request, res: Response) => {
 }
 
 // Delete user (admin only)
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req, res) => {
   try {
     const { id } = req.params
 
@@ -239,7 +238,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 }
 
 // Get user statistics (admin only)
-export const getUserStats = async (req: Request, res: Response) => {
+export const getUserStats = async (req, res) => {
   try {
     const totalUsers = await prisma.user.count()
     const activeUsers = await prisma.user.count({
@@ -283,7 +282,7 @@ export const getUserStats = async (req: Request, res: Response) => {
 }
 
 // ✅ የተጠቃሚዎችን ሁኔታ በጅምላ ማዘመን (Bulk status update)
-export const bulkUpdateUserStatus = async (req: Request, res: Response) => {
+export const bulkUpdateUserStatus = async (req, res) => {
   try {
     const { userIds, isActive } = req.body
 

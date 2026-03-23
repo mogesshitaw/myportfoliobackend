@@ -5,7 +5,7 @@ import {
   getPublicProjectsByUser,
   getPublicProjectStats,
   getRecentPublicProjects
-} from "../controllers/publicProjectController.ts"
+} from "../controllers/publicProjectController.js"
 
 const router = Router()
 

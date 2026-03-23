@@ -1,13 +1,12 @@
-import type { Request, Response } from 'express';
-import { prisma } from '../index.ts';
+import { prisma } from '../index.js';
 
 // Get user's notifications
-export const getNotifications = async (req: Request, res: Response) => {
+export const getNotifications = async (req, res) => {
   try {
-    const userId = req.user!.id;
+    const userId = req.user.id;
     const { limit = 50, unreadOnly = false } = req.query;
     
-    const where: any = { userId };
+    const where = { userId };
     if (unreadOnly === 'true') {
       where.isRead = false;
     }
@@ -15,7 +14,7 @@ export const getNotifications = async (req: Request, res: Response) => {
     const notifications = await prisma.notification.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      take: parseInt(limit as string)
+      take: parseInt(limit)
     });
     
     const unreadCount = await prisma.notification.count({
@@ -39,10 +38,10 @@ export const getNotifications = async (req: Request, res: Response) => {
 };
 
 // Mark notification as read
-export const markAsRead = async (req: Request, res: Response) => {
+export const markAsRead = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.user!.id;
+    const userId = req.user.id;
     
     const notification = await prisma.notification.findFirst({
       where: { id, userId }
@@ -74,9 +73,9 @@ export const markAsRead = async (req: Request, res: Response) => {
 };
 
 // Mark all notifications as read
-export const markAllAsRead = async (req: Request, res: Response) => {
+export const markAllAsRead = async (req, res) => {
   try {
-    const userId = req.user!.id;
+    const userId = req.user.id;
     
     await prisma.notification.updateMany({
       where: { userId, isRead: false },
@@ -97,10 +96,10 @@ export const markAllAsRead = async (req: Request, res: Response) => {
 };
 
 // Delete notification
-export const deleteNotification = async (req: Request, res: Response) => {
+export const deleteNotification = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.user!.id;
+    const userId = req.user.id;
     
     const notification = await prisma.notification.findFirst({
       where: { id, userId }
@@ -131,9 +130,9 @@ export const deleteNotification = async (req: Request, res: Response) => {
 };
 
 // Delete all notifications
-export const deleteAllNotifications = async (req: Request, res: Response) => {
+export const deleteAllNotifications = async (req, res) => {
   try {
-    const userId = req.user!.id;
+    const userId = req.user.id;
     
     await prisma.notification.deleteMany({
       where: { userId }
@@ -153,9 +152,9 @@ export const deleteAllNotifications = async (req: Request, res: Response) => {
 };
 
 // Get notification count
-export const getNotificationCount = async (req: Request, res: Response) => {
+export const getNotificationCount = async (req, res) => {
   try {
-    const userId = req.user!.id;
+    const userId = req.user.id;
     
     const unreadCount = await prisma.notification.count({
       where: { userId, isRead: false }

@@ -1,23 +1,7 @@
-import type { Request, Response } from 'express';
-import { prisma } from '../index.ts';
-
-// Define the actual user object from your authentication middleware
-interface UserFromAuth {
-  id: string;
-  email: string;
-  role: string;
-  isActive: boolean;
-  fullName?: string;
-  avatarUrl?: string;
-}
-
-// Extend Express Request type to include user
-interface AuthenticatedRequest extends Request {
-  user?: UserFromAuth;
-}
+import { prisma } from '../index.js';
 
 // Get dashboard statistics
-export const getDashboardStats = async (req: AuthenticatedRequest, res: Response) => {
+export const getDashboardStats = async (req, res) => {
   try {
     const userId = req.user?.id;
     const userRole = req.user?.role;
@@ -183,7 +167,7 @@ export const getDashboardStats = async (req: AuthenticatedRequest, res: Response
     res.status(500).json({
       success: false,
       error: 'Failed to fetch dashboard statistics',
-      details: process.env.NODE_ENV === 'development' && error instanceof Error ? error.message : undefined
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };

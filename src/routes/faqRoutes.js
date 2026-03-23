@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { askFaqQuestionEmailService } from '../services/askFaqQuestionEmailService.ts';
+import { askFaqQuestionEmailService } from '../services/askFaqQuestionEmailService.js';
 
 const router = Router();
 

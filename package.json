@@ -5,9 +5,9 @@
   "description": "Backend API for Portfolio Platform",
   "main": "src/index.js",
 "scripts": {
-  "dev": "nodemon --exec tsx src/index.ts",
+  "dev": "nodemon --exec tsx src/index.js",
   "build": "tsc",
-  "start": "node src/index.ts",
+  "start": "node src/index.js",
   "migrate": "prisma migrate deploy",
   "seed": "prisma db seed",
   "postinstall": "prisma generate"

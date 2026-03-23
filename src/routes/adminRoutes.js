@@ -8,9 +8,9 @@ import {
   getUserStats,
   toggleUserStatus,      // ✅ አክል
   bulkUpdateUserStatus    // ✅ አክል
-} from "../controllers/adminController.ts"
-import { authenticate } from "../middleware/auth.ts"
-import { authorize } from "../middleware/auth.ts"
+} from "../controllers/adminController.js"
+import { authenticate } from "../middleware/auth.js"
+import { authorize } from "../middleware/auth.js"
 
 const router = Router()
 

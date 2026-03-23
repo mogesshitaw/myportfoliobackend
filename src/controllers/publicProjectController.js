@@ -1,8 +1,7 @@
-import type { Request, Response } from "express"
-import { prisma } from "../index.ts"
+import { prisma } from "../index.js"
 
 // Get all public projects (no authentication required)
-export const getAllPublicProjects = async (req: Request, res: Response) => {
+export const getAllPublicProjects = async (req, res) => {
   try {
     const projects = await prisma.project.findMany({
       where: { 
@@ -54,7 +53,7 @@ export const getAllPublicProjects = async (req: Request, res: Response) => {
 }
 
 // Get single public project by ID (no authentication required)
-export const getPublicProjectById = async (req: Request, res: Response) => {
+export const getPublicProjectById = async (req, res) => {
   try {
     const { id } = req.params
 
@@ -140,7 +139,7 @@ export const getPublicProjectById = async (req: Request, res: Response) => {
 }
 
 // Get public projects by user ID (no authentication required)
-export const getPublicProjectsByUser = async (req: Request, res: Response) => {
+export const getPublicProjectsByUser = async (req, res) => {
   try {
     const { userId } = req.params
 
@@ -186,7 +185,7 @@ export const getPublicProjectsByUser = async (req: Request, res: Response) => {
 }
 
 // Get public project statistics (no authentication required)
-export const getPublicProjectStats = async (req: Request, res: Response) => {
+export const getPublicProjectStats = async (req, res) => {
   try {
     const totalProjects = await prisma.project.count({
       where: { status: "active" }
@@ -251,7 +250,7 @@ export const getPublicProjectStats = async (req: Request, res: Response) => {
 }
 
 // Get recent public projects (for homepage)
-export const getRecentPublicProjects = async (req: Request, res: Response) => {
+export const getRecentPublicProjects = async (req, res) => {
   try {
     const { limit = 6 } = req.query
 
@@ -302,7 +301,7 @@ export const getRecentPublicProjects = async (req: Request, res: Response) => {
 // አሁን ባለው ፋይል ላይ ይህን ያክሉ
 
 // Get featured projects (limit 3)
-export const getFeaturedProjects = async (req: Request, res: Response) => {
+export const getFeaturedProjects = async (req, res) => {
   try {
     const projects = await prisma.project.findMany({
       where: { 
@@ -337,7 +336,7 @@ export const getFeaturedProjects = async (req: Request, res: Response) => {
 }
 
 // Update project featured status (admin only)
-export const updateProjectFeatured = async (req: Request, res: Response) => {
+export const updateProjectFeatured = async (req, res) => {
   try {
     const { id } = req.params
     const { featured } = req.body

@@ -1,25 +1,7 @@
-interface TemplateData {
-  userName: string;
-  projectTitle?: string;
-  commenterName?: string;
-  commentContent?: string;
-  likerName?: string;
-  senderName?: string;
-  messageContent?: string;
-  projectId?: string;
-  year?: number;
-}
-
-interface EmailContent {
-  subject: string;
-  html: string;
-  text: string;  // ✅ 'text' ባህሪን አክለናል
-}
-
 export const emailTemplates = {
-  welcome: (data: TemplateData): EmailContent => ({
-    subject: '🎉 Welcome to DevPortfolio!',
-    html: `
+    welcome: (data) => ({
+        subject: '🎉 Welcome to DevPortfolio!',
+        html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -99,7 +81,7 @@ export const emailTemplates = {
       </body>
       </html>
     `,
-    text: `
+        text: `
       Welcome to DevPortfolio, ${data.userName}! 🎉
 
       We're thrilled to have you join our community. Here's what you can do:
@@ -110,11 +92,10 @@ export const emailTemplates = {
 
       Get started: ${process.env.FRONTEND_URL}/projects
     `,
-  }),
-
-  projectCreated: (data: TemplateData): EmailContent => ({
-    subject: `🎯 Project Created: ${data.projectTitle}`,
-    html: `
+    }),
+    projectCreated: (data) => ({
+        subject: `🎯 Project Created: ${data.projectTitle}`,
+        html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -161,7 +142,7 @@ export const emailTemplates = {
       </body>
       </html>
     `,
-    text: `
+        text: `
       Great job, ${data.userName}! Your project "${data.projectTitle}" has been created and is now live.
 
       What happens next?
@@ -172,11 +153,10 @@ export const emailTemplates = {
 
       View your project: ${process.env.FRONTEND_URL}/projects/${data.projectId}
     `,
-  }),
-
-  newComment: (data: TemplateData): EmailContent => ({
-    subject: `💬 New Comment on "${data.projectTitle}"`,
-    html: `
+    }),
+    newComment: (data) => ({
+        subject: `💬 New Comment on "${data.projectTitle}"`,
+        html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -223,7 +203,7 @@ export const emailTemplates = {
       </body>
       </html>
     `,
-    text: `
+        text: `
       Hello ${data.userName},
 
       ${data.commenterName} commented on your project "${data.projectTitle}":
@@ -231,11 +211,10 @@ export const emailTemplates = {
 
       View and reply: ${process.env.FRONTEND_URL}/projects/${data.projectId}
     `,
-  }),
-
-  newLike: (data: TemplateData): EmailContent => ({
-    subject: `❤️ ${data.likerName} liked your project`,
-    html: `
+    }),
+    newLike: (data) => ({
+        subject: `❤️ ${data.likerName} liked your project`,
+        html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -268,17 +247,16 @@ export const emailTemplates = {
       </body>
       </html>
     `,
-    text: `
+        text: `
       Great news, ${data.userName}!
       ${data.likerName} liked your project "${data.projectTitle}".
 
       View your project: ${process.env.FRONTEND_URL}/projects/${data.projectId}
     `,
-  }),
-
-  newMessage: (data: TemplateData): EmailContent => ({
-    subject: `💌 New message from ${data.senderName}`,
-    html: `
+    }),
+    newMessage: (data) => ({
+        subject: `💌 New message from ${data.senderName}`,
+        html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -315,12 +293,12 @@ export const emailTemplates = {
       </body>
       </html>
     `,
-    text: `
+        text: `
       Hello ${data.userName},
       ${data.senderName} sent you a message about "${data.projectTitle}":
       "${data.messageContent}"
 
       Open chat: ${process.env.FRONTEND_URL}/chat
     `,
-  }),
+    }),
 };

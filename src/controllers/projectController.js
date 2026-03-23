@@ -1,6 +1,5 @@
-import type { Request, Response } from "express"
-import { prisma } from "../index.ts"
-import { emailService } from '../services/emailService.ts'
+import { prisma } from "../index.js"
+import { emailService } from '../services/emailService.js'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -10,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 // Get all projects (public)
-export const getAllProjects = async (req: Request, res: Response) => {
+export const getAllProjects = async (req, res) => {
   try {
     const projects = await prisma.project.findMany({
       where: { status: "active" },
@@ -64,7 +63,7 @@ export const getAllProjects = async (req: Request, res: Response) => {
 }
 
 // Get single project by ID
-export const getProjectById = async (req: Request, res: Response) => {
+export const getProjectById = async (req, res) => {
   try {
     const { id } = req.params
 
@@ -125,7 +124,7 @@ export const getProjectById = async (req: Request, res: Response) => {
 }
 
 // Helper function to delete old image
-const deleteOldImage = (imageUrl: string) => {
+const deleteOldImage = (imageUrl) => {
   try {
     if (!imageUrl) return
     
@@ -146,7 +145,7 @@ const deleteOldImage = (imageUrl: string) => {
 }
 
 // Create new project (authenticated users)
-export const createProject = async (req: Request, res: Response) => {
+export const createProject = async (req, res) => {
   try {
     const { 
       title, 
@@ -254,7 +253,7 @@ export const createProject = async (req: Request, res: Response) => {
 }
 
 // Update project (owner only) - ከምስል ማዘመን ድጋፍ ጋር
-export const updateProject = async (req: Request, res: Response) => {
+export const updateProject = async (req, res) => {
   try {
     const { id } = req.params
     const { 
@@ -269,7 +268,7 @@ export const updateProject = async (req: Request, res: Response) => {
       progress,
       imageUrl              // አዲስ የምስል ዩአርኤል
     } = req.body
-    const userId = req.user!.id
+    const userId = req.user.id
 
     const existingProject = await prisma.project.findFirst({
       where: {
@@ -333,11 +332,11 @@ export const updateProject = async (req: Request, res: Response) => {
 }
 
 // Delete project (owner or admin) - ምስልንም ሰርዝ
-export const deleteProject = async (req: Request, res: Response) => {
+export const deleteProject = async (req, res) => {
   try {
     const { id } = req.params
-    const userId = req.user!.id
-    const userRole = req.user!.role
+    const userId = req.user.id
+    const userRole = req.user.role
 
     const project = await prisma.project.findUnique({
       where: { id }
@@ -384,10 +383,10 @@ export const deleteProject = async (req: Request, res: Response) => {
 
 // ... የተቀሩት ተግባራት (like, comment, stats, etc.) እንዳሉ ይቆያሉ
 // Like a project
-export const likeProject = async (req: Request, res: Response) => {
+export const likeProject = async (req, res) => {
   try {
     const { id } = req.params
-    const userId = req.user!.id
+    const userId = req.user.id
 
     const project = await prisma.project.findUnique({
       where: { id },
@@ -497,11 +496,11 @@ export const likeProject = async (req: Request, res: Response) => {
 }
 
 // Add comment to project
-export const addComment = async (req: Request, res: Response) => {
+export const addComment = async (req, res) => {
   try {
     const { id } = req.params
     const { content } = req.body
-    const userId = req.user!.id
+    const userId = req.user.id
 
     if (!req.user) {
       return res.status(401).json({
@@ -609,7 +608,7 @@ export const addComment = async (req: Request, res: Response) => {
 }
 
 // Get project statistics
-export const getProjectStats = async (req: Request, res: Response) => {
+export const getProjectStats = async (req, res) => {
   try {
     const totalProjects = await prisma.project.count()
     const activeProjects = await prisma.project.count({
@@ -662,9 +661,9 @@ export const getProjectStats = async (req: Request, res: Response) => {
 }
 
 // Get user's projects
-export const getUserProjects = async (req: Request, res: Response) => {
+export const getUserProjects = async (req, res) => {
   try {
-    const userId = req.user!.id
+    const userId = req.user .id
 
     const projects = await prisma.project.findMany({
       where: { userId },
@@ -693,7 +692,7 @@ export const getUserProjects = async (req: Request, res: Response) => {
 }
 
 // Get comments for a project
-export const getProjectComments = async (req: Request, res: Response) => {
+export const getProjectComments = async (req, res) => {
   try {
     const { id } = req.params
 

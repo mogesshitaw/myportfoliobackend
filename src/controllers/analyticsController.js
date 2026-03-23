@@ -1,4 +1,4 @@
-import { prisma } from '../index.ts';
+import { prisma } from '../index.js';
 
 // Get analytics data
 export const getAnalytics = async (req, res) => {

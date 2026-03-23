@@ -1,55 +1,21 @@
 import nodemailer from 'nodemailer';
-import { emailConfig } from '../config/email.ts';
-import { emailTemplates } from '../template/emailTemplates.ts';
-import { prisma } from '../index.ts';
-
-interface SendEmailOptions {
-  to: string | string[];
-  subject: string;
-  html: string;
-  text?: string;
-}
-
-interface NotificationData {
-  userId: string;
-  type: 'welcome' | 'project_created' | 'new_comment' | 'new_like' | 'new_message' | 'contact_message';
-  data: Record<string, any>;
-  projectId?: string;
-}
-
-interface ContactNotificationData {
-  name: string;
-  email: string;
-  subject: string;
-  service?: string;
-  message: string;
-  contactId: string;
-}
-
-interface ContactAutoReplyData {
-  name: string;
-  email: string;
-  subject: string;
-}
-
-interface ContactReplyData {
-  to: string;
-  name: string;
-  subject: string;
-  reply: string;
-}
+import { emailConfig } from '../config/email.js';
+import { emailTemplates } from '../template/emailTemplates.js';
+import { prisma } from '../index.js';
 
 class EmailService {
-  private transporter: nodemailer.Transporter | null = null;
+  constructor() {
+    this.transporter = null;
+  }
 
-  private async getTransporter(): Promise<nodemailer.Transporter> {
+  async getTransporter() {
     if (!this.transporter) {
       this.transporter = await emailConfig.getTransporter();
     }
     return this.transporter;
   }
 
-  async sendEmail(options: SendEmailOptions): Promise<void> {
+  async sendEmail(options) {
     try {
       const transporter = await this.getTransporter();
       
@@ -80,7 +46,7 @@ class EmailService {
     }
   }
 
-  async createAndSendNotification(notificationData: NotificationData): Promise<void> {
+  async createAndSendNotification(notificationData) {
     try {
       const user = await prisma.user.findUnique({
         where: { id: notificationData.userId },
@@ -146,7 +112,7 @@ class EmailService {
   }
 
   // Convenience methods
-  async sendWelcome(userId: string): Promise<void> {
+  async sendWelcome(userId) {
     console.log(`📧 Sending welcome email to user: ${userId}`);
     await this.createAndSendNotification({
       userId,
@@ -155,7 +121,7 @@ class EmailService {
     });
   }
 
-  async sendProjectCreated(userId: string, projectTitle: string, projectId: string): Promise<void> {
+  async sendProjectCreated(userId, projectTitle, projectId) {
     console.log(`📧 Sending project created email to user: ${userId} for project: ${projectTitle}`);
     await this.createAndSendNotification({
       userId,
@@ -165,13 +131,7 @@ class EmailService {
     });
   }
 
-  async sendNewComment(
-    projectOwnerId: string,
-    commenterName: string,
-    projectTitle: string,
-    projectId: string,
-    commentContent: string
-  ): Promise<void> {
+  async sendNewComment(projectOwnerId, commenterName, projectTitle, projectId, commentContent) {
     console.log(`📧 Sending new comment email to user: ${projectOwnerId} from: ${commenterName}`);
     await this.createAndSendNotification({
       userId: projectOwnerId,
@@ -181,12 +141,7 @@ class EmailService {
     });
   }
 
-  async sendNewLike(
-    projectOwnerId: string,
-    likerName: string,
-    projectTitle: string,
-    projectId: string
-  ): Promise<void> {
+  async sendNewLike(projectOwnerId, likerName, projectTitle, projectId) {
     console.log(`📧 Sending new like email to user: ${projectOwnerId} from: ${likerName}`);
     await this.createAndSendNotification({
       userId: projectOwnerId,
@@ -196,12 +151,7 @@ class EmailService {
     });
   }
 
-  async sendNewMessage(
-    recipientId: string,
-    senderName: string,
-    projectTitle: string,
-    messageContent: string
-  ): Promise<void> {
+  async sendNewMessage(recipientId, senderName, projectTitle, messageContent) {
     console.log(`📧 Sending new message email to user: ${recipientId} from: ${senderName}`);
     await this.createAndSendNotification({
       userId: recipientId,
@@ -211,7 +161,7 @@ class EmailService {
   }
 
   // Send contact notification to admin
-  async sendContactNotification(data: ContactNotificationData): Promise<void> {
+  async sendContactNotification(data) {
     const { name, email, subject, service, message, contactId } = data;
     
     const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
@@ -301,7 +251,7 @@ class EmailService {
   }
 
   // Send reply to contact message
-  async sendContactReply(data: ContactReplyData): Promise<void> {
+  async sendContactReply(data) {
     const { to, name, subject, reply } = data;
     
     const emailContent = {
@@ -374,7 +324,7 @@ class EmailService {
   }
 
   // Send auto-reply to user
-  async sendContactAutoReply(data: ContactAutoReplyData): Promise<void> {
+  async sendContactAutoReply(data) {
     const { name, email, subject } = data;
     
     if (!email) {
@@ -456,7 +406,7 @@ class EmailService {
 }
 
 // Helper function to escape HTML
-function escapeHtml(str: string): string {
+function escapeHtml(str) {
   if (!str) return '';
   return str
     .replace(/&/g, '&amp;')

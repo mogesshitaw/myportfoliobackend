@@ -1,22 +1,14 @@
 import nodemailer from 'nodemailer';
 
-interface EmailConfigType {
-  host: string;
-  port: number;
-  secure: boolean;
-  auth: {
-    user: string;
-    pass: string;
-  };
-  from: string;
-}
-
 class EmailConfigManager {
-  private testAccount: nodemailer.TestAccount | null = null;
-  private config: EmailConfigType | null = null;
+  constructor() {
+    this.testAccount = null;  // Store Ethereal test account
+    this.config = null;       // Store email configuration
+  }
 
-  async getTransporter(): Promise<nodemailer.Transporter> {
-    // Always use SMTP if configured
+  // Get email transporter (SMTP or Ethereal)
+  async getTransporter() {
+    // Use SMTP if credentials are configured
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
       console.log('📧 Using SMTP email service');
       return nodemailer.createTransport({
@@ -30,7 +22,7 @@ class EmailConfigManager {
       });
     }
 
-    // Fallback to Ethereal if no SMTP configured
+    // Fallback to Ethereal for testing
     if (!this.testAccount) {
       this.testAccount = await nodemailer.createTestAccount();
       console.log('📧 Ethereal Email Test Account Created:');
@@ -50,11 +42,13 @@ class EmailConfigManager {
     });
   }
 
-  getTestAccount(): nodemailer.TestAccount | null {
+  // Get Ethereal test account (for development)
+  getTestAccount() {
     return this.testAccount;
   }
 
-  getConfig(): EmailConfigType {
+  // Get email configuration object
+  getConfig() {
     if (this.config) return this.config;
 
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {

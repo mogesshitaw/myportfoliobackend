@@ -8,7 +8,7 @@ import {
   getContactStats,
   replyToContactMessage  // Add this
 } from '../controllers/contactController.js';
-import { authenticate, isAdmin } from '../middleware/auth.ts';
+import { authenticate, isAdmin } from '../middleware/auth.js';
 
 const router = Router();
 

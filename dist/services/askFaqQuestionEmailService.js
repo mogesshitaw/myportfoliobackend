@@ -1,66 +1,52 @@
 import nodemailer from 'nodemailer';
 import { emailConfig } from '../config/email.ts';
-
-interface FAQQuestionData {
-  name: string;
-  email: string;
-  question: string;
-}
-
 class AskFaqQuestionEmailService {
-  private transporter: nodemailer.Transporter | null = null;
-
-  private async getTransporter(): Promise<nodemailer.Transporter> {
-    if (!this.transporter) {
-      this.transporter = await emailConfig.getTransporter();
+    constructor() {
+        this.transporter = null;
     }
-    return this.transporter;
-  }
-
-  async sendEmail(options: { to: string; subject: string; html: string; text: string }): Promise<void> {
-    try {
-      const transporter = await this.getTransporter();
-      
-      const mailOptions = {
-        from: process.env.FROM_EMAIL ,
-        to: options.to,
-        subject: options.subject,
-        html: options.html,
-        text: options.text,
-      };
-
-      const info = await transporter.sendMail(mailOptions);
-      
-      console.log(`✅ FAQ Email sent: ${info.messageId}`);
-      
-      if (process.env.NODE_ENV !== 'production') {
-        const testAccount = emailConfig.getTestAccount();
-        if (testAccount) {
-          console.log(`📬 Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    async getTransporter() {
+        if (!this.transporter) {
+            this.transporter = await emailConfig.getTransporter();
         }
-      }
-    } catch (error) {
-      console.error('❌ Failed to send FAQ email:', error);
-      if (process.env.NODE_ENV === 'production') {
-        throw error;
-      }
+        return this.transporter;
     }
-  }
-
-  // Send question notification to admin
-  async sendQuestionNotification(data: FAQQuestionData): Promise<void> {
-    const { name, email, question } = data;
-    
-    const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
-    
-    if (!adminEmail) {
-      console.error('❌ Admin email not configured. Set ADMIN_EMAIL or SMTP_USER in environment variables.');
-      return;
+    async sendEmail(options) {
+        try {
+            const transporter = await this.getTransporter();
+            const mailOptions = {
+                from: process.env.FROM_EMAIL,
+                to: options.to,
+                subject: options.subject,
+                html: options.html,
+                text: options.text,
+            };
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`✅ FAQ Email sent: ${info.messageId}`);
+            if (process.env.NODE_ENV !== 'production') {
+                const testAccount = emailConfig.getTestAccount();
+                if (testAccount) {
+                    console.log(`📬 Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+                }
+            }
+        }
+        catch (error) {
+            console.error('❌ Failed to send FAQ email:', error);
+            if (process.env.NODE_ENV === 'production') {
+                throw error;
+            }
+        }
     }
-    
-    const emailContent = {
-      subject: `❓ New Question from ${name}`,
-      html: `
+    // Send question notification to admin
+    async sendQuestionNotification(data) {
+        const { name, email, question } = data;
+        const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+        if (!adminEmail) {
+            console.error('❌ Admin email not configured. Set ADMIN_EMAIL or SMTP_USER in environment variables.');
+            return;
+        }
+        const emailContent = {
+            subject: `❓ New Question from ${name}`,
+            html: `
         <!DOCTYPE html>
         <html>
         <head>
@@ -121,7 +107,7 @@ class AskFaqQuestionEmailService {
         </body>
         </html>
       `,
-      text: `
+            text: `
         New FAQ Question
         
         From: ${name} (${email})
@@ -134,26 +120,22 @@ class AskFaqQuestionEmailService {
         
         This message was sent from your portfolio FAQ page.
       `
-    };
-    
-    await this.sendEmail({
-      to: adminEmail,
-      subject: emailContent.subject,
-      html: emailContent.html,
-      text: emailContent.text
-    });
-    
-    // Send auto-reply to the user
-    await this.sendQuestionAutoReply({ name, email, question });
-  }
-
-  // Send auto-reply to user after they submit a question
-  async sendQuestionAutoReply(data: FAQQuestionData): Promise<void> {
-    const { name, email, question } = data;
-    
-    const emailContent = {
-      subject: `Thank You for Your Question - DevPortfolio`,
-      html: `
+        };
+        await this.sendEmail({
+            to: adminEmail,
+            subject: emailContent.subject,
+            html: emailContent.html,
+            text: emailContent.text
+        });
+        // Send auto-reply to the user
+        await this.sendQuestionAutoReply({ name, email, question });
+    }
+    // Send auto-reply to user after they submit a question
+    async sendQuestionAutoReply(data) {
+        const { name, email, question } = data;
+        const emailContent = {
+            subject: `Thank You for Your Question - DevPortfolio`,
+            html: `
         <!DOCTYPE html>
         <html>
         <head>
@@ -204,7 +186,7 @@ class AskFaqQuestionEmailService {
         </body>
         </html>
       `,
-      text: `
+            text: `
         Thank You for Your Question!
         
         Dear ${name},
@@ -225,26 +207,24 @@ class AskFaqQuestionEmailService {
         Email: mogesshitaw318@gmail.com
         Phone: +251 935 945 658
       `
-    };
-    
-    await this.sendEmail({
-      to: email,
-      subject: emailContent.subject,
-      html: emailContent.html,
-      text: emailContent.text
-    });
-  }
+        };
+        await this.sendEmail({
+            to: email,
+            subject: emailContent.subject,
+            html: emailContent.html,
+            text: emailContent.text
+        });
+    }
 }
-
 // Helper function to escape HTML
-function escapeHtml(str: string): string {
-  if (!str) return '';
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+function escapeHtml(str) {
+    if (!str)
+        return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
-
 export const askFaqQuestionEmailService = new AskFaqQuestionEmailService();

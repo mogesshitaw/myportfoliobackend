@@ -1,34 +1,20 @@
-import type { Request, Response } from "express";
-import { prisma } from "../index.ts";
-import { emailService } from '../services/emailService.ts';
+import { prisma } from "../index.js";
+import { emailService } from '../services/emailService.js';
 import {
   hashPassword,
   comparePasswords,
   generateTokens,
-} from "../utils/auth.ts";
+} from "../utils/auth.js";
 
 // Cookie configuration
 const cookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
+  sameSite: "lax",
 };
 
-interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-    role: string;
-     isActive: boolean;
-    fullName?: string;
-  avatarUrl?: string;
-  };
-}
-
-
-
 // ================= REGISTER =================
-export const register = async (req: Request, res: Response) => {
+export const register = async (req, res) => {
   console.log("📝 Register endpoint hit!");
 
   try {
@@ -93,7 +79,8 @@ export const register = async (req: Request, res: Response) => {
         refreshToken,
       },
     });
-await emailService.sendWelcome(user.id);
+    
+    await emailService.sendWelcome(user.id);
   } catch (error) {
     console.error("❌ Registration error:", error);
 
@@ -105,7 +92,7 @@ await emailService.sendWelcome(user.id);
 };
 
 // ================= LOGIN =================
-export const login = async (req: Request, res: Response) => {
+export const login = async (req, res) => {
   console.log("🔑 Login endpoint hit!");
 
   try {
@@ -186,7 +173,7 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // ================= LOGOUT =================
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (req, res) => {
   try {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
@@ -206,7 +193,7 @@ export const logout = async (req: Request, res: Response) => {
 };
 
 // ================= GET CURRENT USER =================
-export const getMe = async (req: AuthRequest, res: Response) => {
+export const getMe = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
@@ -241,14 +228,15 @@ export const getMe = async (req: AuthRequest, res: Response) => {
     });
   }
 };
+
 // Update user profile
-export const updateProfile = async (req: AuthRequest, res: Response) => {
+export const updateProfile = async (req, res) => {
   try {
-    const userId = req.user!.id;
+    const userId = req.user.id;
     const { fullName, email, avatarUrl } = req.body;
 
     // Check if email already exists (if changed)
-    if (email !== req.user!.email) {
+    if (email !== req.user.email) {
       const existingUser = await prisma.user.findUnique({
         where: { email }
       });
@@ -291,9 +279,9 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
 };
 
 // Change password
-export const changePassword = async (req: AuthRequest, res: Response) => {
+export const changePassword = async (req, res) => {
   try {
-    const userId = req.user!.id;
+    const userId = req.user.id;
     const { currentPassword, newPassword } = req.body;
 
     const user = await prisma.user.findUnique({

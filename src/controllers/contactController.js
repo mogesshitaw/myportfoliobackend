@@ -1,5 +1,5 @@
-import { prisma } from '../index.ts';
-import { emailService } from '../services/emailService.ts';
+import { prisma } from '../index.js';
+import { emailService } from '../services/emailService.js';
 
 // Send contact message
 export const sendContactMessage = async (req, res) => {
