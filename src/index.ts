@@ -6,11 +6,11 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { PrismaClient } from '@prisma/client';
 import authRoutes from './routes/authRoute.js';
-import userRoutes from './routes/userRoutes.js'
+import userRoutes from './routes/userRoutes.ts'
 import notificationRoutes from './routes/notificationRoutes.js';
-import adminRoutes from './routes/adminRoutes.js'
-import projectRoute from './routes/projectRoutes.js'
-import publicProjectRoutes from './routes/publicProjectRoutes.js';
+import adminRoutes from './routes/adminRoutes.ts'
+import projectRoute from './routes/projectRoutes.ts'
+import publicProjectRoutes from './routes/publicProjectRoutes.ts';
 import uploadRoutes from './routes/uploadRoutes.js';
 import testmoniaRoutes from './routes/testimonialRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';

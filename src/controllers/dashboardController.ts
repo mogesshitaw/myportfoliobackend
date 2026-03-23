@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { prisma } from '../index.js';
+import type { Request, Response } from 'express';
+import { prisma } from '../index.ts';
 
 // Define the actual user object from your authentication middleware
 interface UserFromAuth {

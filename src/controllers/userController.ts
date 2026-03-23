@@ -1,5 +1,5 @@
-﻿import { Request, Response } from "express"
-import { prisma } from "../index.js"
+﻿import type { Request, Response } from "express"
+import { prisma } from "../index.ts"
 
 // Get all users (admin only)
 export const getUsers = async (req: Request, res: Response) => {
@@ -17,7 +17,6 @@ export const getUsers = async (req: Request, res: Response) => {
         _count: {
           select: { 
             projects: true,
-            messages: true 
           }
         }
       },

@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { prisma } from '../index.js';
+import type { Request, Response } from 'express';
+import { prisma } from '../index.ts';
 
 // Get user's notifications
 export const getNotifications = async (req: Request, res: Response) => {

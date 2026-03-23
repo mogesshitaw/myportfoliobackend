@@ -11,8 +11,8 @@ import {
   getProjectStats,
   getUserProjects,
   getProjectComments
-} from "../controllers/projectController.js"
-import { authenticate } from "../middleware/auth.js"
+} from "../controllers/projectController.ts"
+import { authenticate } from "../middleware/auth.ts"
 
 const router = Router()
 

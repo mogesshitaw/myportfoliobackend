@@ -6,9 +6,8 @@ import {
   deleteNotification,
   deleteAllNotifications,
   getNotificationCount
-} from '../controllers/notificationController.js';
-import { authenticate } from '../middleware/auth.js';
-import { askFaqQuestionEmailService } from '../services/askFaqQuestionEmailService.js';
+} from '../controllers/notificationController.ts';
+import { authenticate } from '../middleware/auth.ts';
 
 
 const router = Router();

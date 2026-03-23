@@ -1,6 +1,6 @@
-import { Request, Response } from "express"
-import { prisma } from "../index.js"
-import { emailService } from '../services/emailService.js'
+import type { Request, Response } from "express"
+import { prisma } from "../index.ts"
+import { emailService } from '../services/emailService.ts'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'

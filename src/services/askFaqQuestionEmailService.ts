@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { emailConfig } from '../config/email.js';
+import { emailConfig } from '../config/email.ts';
 
 interface FAQQuestionData {
   name: string;

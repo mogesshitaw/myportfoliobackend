@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
-import { emailConfig } from '../config/email.js';
-import { emailTemplates } from '../template/emailTemplates.js';
-import { prisma } from '../index.js';
+import { emailConfig } from '../config/email.ts';
+import { emailTemplates } from '../template/emailTemplates.ts';
+import { prisma } from '../index.ts';
 
 interface SendEmailOptions {
   to: string | string[];

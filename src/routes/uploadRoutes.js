@@ -5,7 +5,7 @@ import {
   uploadAvatar,
   deleteImage 
 } from '../controllers/uploadController.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate } from '../middleware/auth.ts';
 
 const router = Router();
 

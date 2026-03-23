@@ -1,4 +1,4 @@
-import { prisma } from '../index.js';
+import { prisma } from '../index.ts';
 
 // Get all testimonials (admin) - includes pending
 export const getAllTestimonials = async (req, res) => {

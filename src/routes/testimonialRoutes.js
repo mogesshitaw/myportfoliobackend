@@ -10,7 +10,7 @@ import {
   toggleFeatured,
   deleteTestimonial
 } from '../controllers/testimonialController.js';
-import { authenticate, isAdmin, authorize } from '../middleware/auth.js';
+import { authenticate, isAdmin, authorize } from '../middleware/auth.ts';
 
 const router = Router();
 

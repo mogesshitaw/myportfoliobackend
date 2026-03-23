@@ -1,5 +1,5 @@
-import { Request, Response } from "express"
-import { prisma } from "../index.js"
+import type { Request, Response } from "express"
+import { prisma } from "../index.ts"
 import bcrypt from 'bcryptjs'
 
 // Get all users (admin only)

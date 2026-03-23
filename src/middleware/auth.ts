@@ -1,6 +1,6 @@
-﻿import { Request, Response, NextFunction } from "express"
+﻿import type { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
-import { prisma } from "../index.js"
+import { prisma } from "../index.ts"
 
 declare global {
   namespace Express {

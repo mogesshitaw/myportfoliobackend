@@ -7,9 +7,9 @@ import {
   deleteUser, 
   toggleUserStatus,
   getUserStats 
-} from "../controllers/userController.js"
-import { authenticate } from "../middleware/auth.js"
-import { authorize } from "../middleware/auth.js"
+} from "../controllers/userController.ts"
+import { authenticate } from "../middleware/auth.ts"
+import { authorize } from "../middleware/auth.ts"
 
 const router = Router()
 
