@@ -6,9 +6,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "postinstall": "npx prisma generate",
-     "build": "echo 'No build step needed for JavaScript'"
+    "start": "node src/index.js"
+  
   },
   "dependencies": {
     "@prisma/client": "^6.0.0",
