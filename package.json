@@ -5,7 +5,6 @@
   "description": "Backend API for Portfolio Platform",
   "main": "src/index.js",
   "scripts": {
-    "postinstall": "npx prisma generate",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   
