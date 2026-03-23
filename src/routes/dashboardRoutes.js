@@ -5,7 +5,6 @@ import { authenticate } from '../middleware/auth.js';
 const router = Router();
 
 // Dashboard stats - requires authentication
-router.use(authenticate);
-router.get('/stats', getDashboardStats);
+router.get('/stats',authenticate, getDashboardStats);
 
 export default router;

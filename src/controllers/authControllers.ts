@@ -19,6 +19,9 @@ interface AuthRequest extends Request {
     id: string;
     email: string;
     role: string;
+     isActive: boolean;
+    fullName?: string;
+  avatarUrl?: string;
   };
 }
 

@@ -1,10 +1,34 @@
+import { Request, Response } from 'express';
 import { prisma } from '../index.js';
 
+// Define the actual user object from your authentication middleware
+interface UserFromAuth {
+  id: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  fullName?: string;
+  avatarUrl?: string;
+}
+
+// Extend Express Request type to include user
+interface AuthenticatedRequest extends Request {
+  user?: UserFromAuth;
+}
+
 // Get dashboard statistics
-export const getDashboardStats = async (req, res) => {
+export const getDashboardStats = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = req.user.id;
-    const userRole = req.user.role;
+    const userId = req.user?.id;
+    const userRole = req.user?.role;
+
+    // Check authentication
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        error: 'Authentication required'
+      });
+    }
 
     // Get user's projects (if not admin)
     const projects = await prisma.project.findMany({
@@ -29,14 +53,14 @@ export const getDashboardStats = async (req, res) => {
 
     const activeProjects = await prisma.project.count({
       where: {
-        userId: userRole === 'admin' ? undefined : userId,
+        ...(userRole !== 'admin' && { userId }),
         status: 'active'
       }
     });
 
     const completedProjects = await prisma.project.count({
       where: {
-        userId: userRole === 'admin' ? undefined : userId,
+        ...(userRole !== 'admin' && { userId }),
         status: 'completed'
       }
     });
@@ -128,6 +152,11 @@ export const getDashboardStats = async (req, res) => {
       };
     }
 
+    // Calculate average progress for non-admin users
+    const averageProgress = projectCounts._sum.progress && projectCounts._count > 0
+      ? Math.round(projectCounts._sum.progress / projectCounts._count)
+      : 0;
+
     res.json({
       success: true,
       data: {
@@ -136,7 +165,8 @@ export const getDashboardStats = async (req, res) => {
           total: projectCounts._count,
           active: activeProjects,
           completed: completedProjects,
-          featured: 0 // Add if you have featured projects
+          featured: 0,
+          averageProgress: userRole !== 'admin' ? averageProgress : undefined
         },
         engagement: {
           totalLikes: likesCount,
@@ -152,7 +182,8 @@ export const getDashboardStats = async (req, res) => {
     console.error('Dashboard stats error:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch dashboard statistics'
+      error: 'Failed to fetch dashboard statistics',
+      details: process.env.NODE_ENV === 'development' && error instanceof Error ? error.message : undefined
     });
   }
 };
