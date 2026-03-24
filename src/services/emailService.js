@@ -20,7 +20,7 @@ class EmailService {
       const transporter = await this.getTransporter();
       
       const mailOptions = {
-        from: process.env.FROM_EMAIL || '"DevPortfolio" <noreply@devportfolio.com>',
+        from: process.env.FROM_EMAIL || '"MsPortfolio" <noreply@MsPortfolio.com>',
         to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
         subject: options.subject,
         html: options.html,
@@ -222,7 +222,7 @@ class EmailService {
             </div>
             <div class="footer">
               <p>This message was sent from your portfolio contact form.</p>
-              <p>© ${new Date().getFullYear()} DevPortfolio</p>
+              <p>© ${new Date().getFullYear()} MsPortfolio</p>
             </div>
           </div>
         </body>
@@ -333,7 +333,7 @@ class EmailService {
     }
     
     const emailContent = {
-      subject: `Thank you for reaching out! - DevPortfolio`,
+      subject: `Thank you for reaching out! - MsPortfolio`,
       html: `
         <!DOCTYPE html>
         <html>
