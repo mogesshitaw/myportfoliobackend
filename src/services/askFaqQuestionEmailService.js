@@ -148,7 +148,7 @@ class AskFaqQuestionEmailService {
     const { name, email, question } = data;
     
     const emailContent = {
-      subject: `Thank You for Your Question - MsPortfolio`,
+      subject: `Thank You for Your Question - DevPortfolio`,
       html: `
         <!DOCTYPE html>
         <html>

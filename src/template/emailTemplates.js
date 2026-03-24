@@ -1,13 +1,13 @@
 export const emailTemplates = {
   welcome: (data) => ({
-    subject: '🎉 Welcome to MsPortfolio!',
+    subject: '🎉 Welcome to DevPortfolio!',
     html: `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Welcome to MsPortfolio</title>
+        <title>Welcome to DevPortfolio</title>
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; line-height: 1.6; }
@@ -31,7 +31,7 @@ export const emailTemplates = {
       <body>
         <div class="container">
           <div class="header">
-            <h1>🚀 Welcome to MsPortfolio!</h1>
+            <h1>🚀 Welcome to DevPortfolio!</h1>
           </div>
           <div class="content">
             <h2>Hello ${data.userName},</h2>
@@ -74,7 +74,7 @@ export const emailTemplates = {
             </div>
           </div>
           <div class="footer">
-            <p>© ${data.year || new Date().getFullYear()} MsPortfolio. All rights reserved.</p>
+            <p>© ${data.year || new Date().getFullYear()} DevPortfolio. All rights reserved.</p>
             <p style="font-size: 12px;">If you didn't create this account, please ignore this email.</p>
           </div>
         </div>
@@ -82,7 +82,7 @@ export const emailTemplates = {
       </html>
     `,
     text: `
-      Welcome to MsPortfolio, ${data.userName}! 🎉
+      Welcome to DevPortfolio, ${data.userName}! 🎉
 
       We're thrilled to have you join our community. Here's what you can do:
       - Showcase your projects
@@ -137,7 +137,7 @@ export const emailTemplates = {
             </div>
           </div>
           <div class="footer">
-            <p>© ${data.year || new Date().getFullYear()} MsPortfolio</p>
+            <p>© ${data.year || new Date().getFullYear()} DevPortfolio</p>
           </div>
         </div>
       </body>
