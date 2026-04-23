@@ -17,6 +17,7 @@ import contactRoutes from './routes/contactRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import faqRoutes from './routes/faqRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
 
 dotenv.config();
 
@@ -55,6 +56,7 @@ app.use('/api/contacts', contactRoutes);
 app.use('/api/analytics', analyticsRoutes); 
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/faq', faqRoutes);
+app.use('/api/chat', chatRoutes);
 
 
 app.get('/api/health', (req, res) => {

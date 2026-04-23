@@ -198,7 +198,6 @@ class AskFaqQuestionEmailService {
             </div>
           </div>
         </body>
-        </html>
       `,
       text: `
         Thank You for Your Question!
