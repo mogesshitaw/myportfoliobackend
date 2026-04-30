@@ -10,7 +10,8 @@ import {
   addComment,
   getProjectStats,
   getUserProjects,
-  getProjectComments
+  getProjectComments,
+  getAllfeaturedProjects
 } from "../controllers/projectController.js"
 import { authenticate } from "../middleware/auth.js"
 
@@ -18,6 +19,7 @@ const router = Router()
 
 // Public routes
 router.get("/", getAllProjects)
+router.get("/featured",getAllfeaturedProjects)
 router.get("/stats", getProjectStats)
 router.get("/:id", getProjectById)
 

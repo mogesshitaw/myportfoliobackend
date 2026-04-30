@@ -7,6 +7,58 @@ import { dirname } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+export const getAllfeaturedProjects = async (req, res) => {
+  try {
+    const projects = await prisma.project.findMany({
+      where: { status: "active" ,featured:true},
+      include: {
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                fullName: true,
+                avatarUrl: true
+              }
+            }
+          },
+          orderBy: { createdAt: "desc" },
+          take: 5
+        },
+        likes: true,
+        _count: {
+          select: {
+            comments: true,
+            likes: true
+          }
+        }
+      },
+      orderBy: { createdAt: "desc" }
+    })
+
+    res.json({
+      success: true,
+      data: projects
+    })
+  } catch (error) {
+    console.error("Get projects error:", error)
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch projects"
+    })
+  }
+}
 
 // Get all projects (public)
 export const getAllProjects = async (req, res) => {
@@ -61,7 +113,6 @@ export const getAllProjects = async (req, res) => {
     })
   }
 }
-
 // Get single project by ID
 export const getProjectById = async (req, res) => {
   try {
@@ -122,7 +173,6 @@ export const getProjectById = async (req, res) => {
     })
   }
 }
-
 // Helper function to delete old image
 const deleteOldImage = (imageUrl) => {
   try {
@@ -156,7 +206,8 @@ export const createProject = async (req, res) => {
       liveUrl,            
       githubUrl,          
       status,
-      imageUrl            // አዲስ የምስል ዩአርኤል
+      imageUrl,
+      featured          // አዲስ የምስል ዩአርኤል
     } = req.body
     
     if (!req.user) {
@@ -190,7 +241,8 @@ export const createProject = async (req, res) => {
         githubUrl: githubUrl || null,       
         imageUrl: imageUrl || null,          // ምስል ዩአርኤል ማስቀመጥ
         status: status || "active",
-        userId
+        userId,
+        featured:featured
       },
       include: {
         user: {
@@ -266,7 +318,8 @@ export const updateProject = async (req, res) => {
       githubUrl,           
       status, 
       progress,
-      imageUrl              // አዲስ የምስል ዩአርኤል
+      imageUrl  ,
+      featured           // አዲስ የምስል ዩአርኤል
     } = req.body
     const userId = req.user.id
 
@@ -305,7 +358,8 @@ export const updateProject = async (req, res) => {
         githubUrl: githubUrl !== undefined ? githubUrl : existingProject.githubUrl,
         imageUrl: imageUrl !== undefined ? imageUrl : existingProject.imageUrl,
         status: status || existingProject.status,
-        progress: progress !== undefined ? progress : existingProject.progress
+        progress: progress !== undefined ? progress : existingProject.progress,
+        featured:featured !== undefined ? featured : existingProject.featured
       },
       include: {
         user: {
@@ -381,7 +435,6 @@ export const deleteProject = async (req, res) => {
   }
 }
 
-// ... የተቀሩት ተግባራት (like, comment, stats, etc.) እንዳሉ ይቆያሉ
 // Like a project
 export const likeProject = async (req, res) => {
   try {
@@ -690,7 +743,6 @@ export const getUserProjects = async (req, res) => {
     })
   }
 }
-
 // Get comments for a project
 export const getProjectComments = async (req, res) => {
   try {
