@@ -3,35 +3,68 @@ import path from 'path';
 import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 import { fileURLToPath } from 'url';
-import { v2 as cloudinary } from 'cloudinary';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configure Cloudinary
-const CLOUDINARY_CONFIG = {
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-};
+// Try to import Cloudinary with better error handling
+let cloudinary;
+let CLOUDINARY_AVAILABLE = false;
 
-// Check if Cloudinary is configured
-const isCloudinaryConfigured = () => {
-  return !!(CLOUDINARY_CONFIG.cloud_name && 
-            CLOUDINARY_CONFIG.api_key && 
-            CLOUDINARY_CONFIG.api_secret);
-};
-
-// Configure Cloudinary only if credentials exist
-if (isCloudinaryConfigured()) {
-  cloudinary.config(CLOUDINARY_CONFIG);
-  console.log('✅ Cloudinary configured successfully');
-} else {
-  console.log('⚠️ Cloudinary not configured, using local storage only');
+try {
+  const cloudinaryModule = await import('cloudinary');
+  cloudinary = cloudinaryModule.v2;
+  CLOUDINARY_AVAILABLE = true;
+  console.log('✅ Cloudinary package loaded successfully');
+} catch (error) {
+  console.log('⚠️ Cloudinary package not installed:', error.message);
 }
 
-// Determine upload method
+// Configure Cloudinary with better logging
+const isCloudinaryConfigured = () => {
+  if (!CLOUDINARY_AVAILABLE) {
+    console.log('❌ Cloudinary package not available');
+    return false;
+  }
+  
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  
+  console.log('🔍 Checking Cloudinary config:');
+  console.log(`   Cloud Name: ${cloudName ? '✅ Set' : '❌ Missing'}`);
+  console.log(`   API Key: ${apiKey ? '✅ Set' : '❌ Missing'}`);
+  console.log(`   API Secret: ${apiSecret ? '✅ Set' : '❌ Missing'}`);
+  
+  const configured = !!(cloudName && apiKey && apiSecret);
+  
+  if (configured && cloudinary) {
+    try {
+      cloudinary.config({
+        cloud_name: cloudName,
+        api_key: apiKey,
+        api_secret: apiSecret,
+      });
+      console.log('✅ Cloudinary configured successfully');
+      
+      // Test the configuration
+      console.log('🔍 Testing Cloudinary connection...');
+    } catch (configError) {
+      console.error('❌ Failed to configure Cloudinary:', configError.message);
+      return false;
+    }
+  } else if (CLOUDINARY_AVAILABLE && !configured) {
+    console.log('⚠️ Cloudinary installed but not properly configured');
+  }
+  
+  return configured;
+};
+
+// Determine upload method with logging
 const USE_CLOUDINARY = process.env.USE_CLOUDINARY === 'true' && isCloudinaryConfigured();
+
+console.log(`📤 Upload method: ${USE_CLOUDINARY ? 'Cloudinary' : 'Local Storage'}`);
+console.log(`   USE_CLOUDINARY env: ${process.env.USE_CLOUDINARY || 'not set'}`);
 
 class ImageUploadService {
   
@@ -42,6 +75,9 @@ class ImageUploadService {
       quality = 85,
       folder = 'portfolio/projects'
     } = options;
+
+    console.log(`📤 Uploading project image: ${file.originalname}`);
+    console.log(`   Using: ${USE_CLOUDINARY ? 'Cloudinary' : 'Local'}`);
 
     if (USE_CLOUDINARY) {
       return this.uploadToCloudinary(file, {
@@ -62,36 +98,12 @@ class ImageUploadService {
     }
   }
 
-  async uploadAvatar(file, options = {}) {
-    const { 
-      width = 200, 
-      height = 200, 
-      quality = 85,
-      folder = 'portfolio/avatars'
-    } = options;
-
-    if (USE_CLOUDINARY) {
-      return this.uploadToCloudinary(file, {
-        folder,
-        width,
-        height,
-        quality,
-        crop: 'fill',
-        gravity: 'face'
-      });
-    } else {
-      return this.uploadToLocal(file, {
-        type: 'avatar',
-        width,
-        height,
-        quality,
-        fit: 'cover'
-      });
-    }
-  }
-
   async uploadToCloudinary(file, options) {
     try {
+      if (!cloudinary) {
+        throw new Error('Cloudinary not available');
+      }
+      
       const { folder, width, height, quality, crop, gravity } = options;
       
       // Build transformation
@@ -106,6 +118,10 @@ class ImageUploadService {
         transformation.gravity = gravity;
       }
 
+      console.log(`📤 Uploading to Cloudinary: ${file.originalname}`);
+      console.log(`   Folder: ${folder}`);
+      console.log(`   Transformation:`, transformation);
+      
       // Upload to Cloudinary
       const result = await cloudinary.uploader.upload(file.path, {
         folder: folder,
@@ -118,6 +134,10 @@ class ImageUploadService {
         fs.unlinkSync(file.path);
       }
 
+      console.log(`✅ Uploaded to Cloudinary successfully!`);
+      console.log(`   Public ID: ${result.public_id}`);
+      console.log(`   URL: ${result.secure_url}`);
+      
       return {
         success: true,
         imageUrl: result.secure_url,
@@ -128,8 +148,8 @@ class ImageUploadService {
         format: result.format
       };
     } catch (error) {
-      console.error('Cloudinary upload error:', error);
-      // Fallback to local upload
+      console.error('❌ Cloudinary upload error:', error.message);
+      console.error('   Error details:', error);
       console.log('⚠️ Falling back to local storage...');
       return this.uploadToLocal(file, options);
     }
@@ -143,12 +163,15 @@ class ImageUploadService {
       const uploadsDir = path.join(__dirname, '../uploads');
       if (!fs.existsSync(uploadsDir)) {
         fs.mkdirSync(uploadsDir, { recursive: true });
+        console.log('📁 Created uploads directory');
       }
 
       const fileExt = path.extname(file.originalname);
       const fileName = `${type}-${uuidv4()}${fileExt}`;
       const filePath = path.join(uploadsDir, fileName);
 
+      console.log(`📝 Optimizing image locally: ${file.originalname}`);
+      
       // Optimize image with Sharp
       let sharpInstance = sharp(file.path);
       
@@ -173,6 +196,9 @@ class ImageUploadService {
       const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
       const imageUrl = `${baseUrl}/uploads/${fileName}`;
 
+      console.log(`✅ Image saved locally: ${fileName}`);
+      console.log(`   URL: ${imageUrl}`);
+      
       return {
         success: true,
         imageUrl: imageUrl,
@@ -181,53 +207,19 @@ class ImageUploadService {
         message: 'Image saved locally'
       };
     } catch (error) {
-      console.error('Local upload error:', error);
+      console.error('❌ Local upload error:', error);
       throw error;
-    }
-  }
-
-  async deleteImage(identifier, provider = 'local') {
-    try {
-      if (provider === 'cloudinary' && USE_CLOUDINARY) {
-        // Delete from Cloudinary
-        const result = await cloudinary.uploader.destroy(identifier);
-        return {
-          success: result.result === 'ok',
-          provider: 'cloudinary',
-          message: result.result === 'ok' ? 'Deleted from Cloudinary' : 'Deletion failed'
-        };
-      } else {
-        // Delete from local storage
-        const filePath = path.join(__dirname, '../uploads', identifier);
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-          return {
-            success: true,
-            provider: 'local',
-            message: 'Deleted from local storage'
-          };
-        }
-        return {
-          success: false,
-          error: 'File not found'
-        };
-      }
-    } catch (error) {
-      console.error('Delete error:', error);
-      return {
-        success: false,
-        error: error.message
-      };
     }
   }
 
   getUploadMethod() {
     return {
       useCloudinary: USE_CLOUDINARY,
+      cloudinaryAvailable: CLOUDINARY_AVAILABLE,
       isConfigured: isCloudinaryConfigured(),
       provider: USE_CLOUDINARY ? 'cloudinary' : 'local',
-      cloudinaryConfig: USE_CLOUDINARY ? {
-        cloudName: CLOUDINARY_CONFIG.cloud_name
+      cloudinaryConfig: USE_CLOUDINARY && cloudinary ? {
+        cloudName: process.env.CLOUDINARY_CLOUD_NAME
       } : null
     };
   }

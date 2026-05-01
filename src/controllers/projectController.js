@@ -193,7 +193,6 @@ const deleteOldImage = (imageUrl) => {
     console.error("Failed to delete old image:", error)
   }
 }
-
 // Create new project (authenticated users)
 export const createProject = async (req, res) => {
   try {
@@ -303,7 +302,6 @@ export const createProject = async (req, res) => {
     })
   }
 }
-
 // Update project (owner only) - ከምስል ማዘመን ድጋፍ ጋር
 export const updateProject = async (req, res) => {
   try {
@@ -384,7 +382,6 @@ export const updateProject = async (req, res) => {
     })
   }
 }
-
 // Delete project (owner or admin) - ምስልንም ሰርዝ
 export const deleteProject = async (req, res) => {
   try {
@@ -434,7 +431,6 @@ export const deleteProject = async (req, res) => {
     })
   }
 }
-
 // Like a project
 export const likeProject = async (req, res) => {
   try {
@@ -547,7 +543,6 @@ export const likeProject = async (req, res) => {
     })
   }
 }
-
 // Add comment to project
 export const addComment = async (req, res) => {
   try {
@@ -659,7 +654,6 @@ export const addComment = async (req, res) => {
     })
   }
 }
-
 // Get project statistics
 export const getProjectStats = async (req, res) => {
   try {
@@ -712,7 +706,6 @@ export const getProjectStats = async (req, res) => {
     })
   }
 }
-
 // Get user's projects
 export const getUserProjects = async (req, res) => {
   try {
