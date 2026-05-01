@@ -3,7 +3,8 @@ import upload from '../middleware/upload.js';
 import { 
   uploadProjectImage, 
   uploadAvatar,
-  deleteImage 
+  deleteImage,
+  getUploadConfig 
 } from '../controllers/uploadController.js';
 import { authenticate } from '../middleware/auth.js';
 
@@ -30,5 +31,7 @@ router.delete(
   authenticate,
   deleteImage
 );
+router.get('/config', getUploadConfig);  // Add this route
+
 
 export default router;

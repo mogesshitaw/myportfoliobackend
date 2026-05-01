@@ -1,11 +1,5 @@
 import fs from 'fs';
-import path from 'path';
-import sharp from 'sharp';
-import { v4 as uuidv4 } from 'uuid';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import imageUploadService from '../services/imageUploadService.js';
 
 // Upload project image
 export const uploadProjectImage = async (req, res) => {
@@ -17,32 +11,22 @@ export const uploadProjectImage = async (req, res) => {
       });
     }
 
-    const file = req.file;
-    const filePath = file.path;
-    const fileExt = path.extname(file.originalname);
-    const optimizedFileName = `project-${uuidv4()}${fileExt}`;
-    const optimizedFilePath = path.join(__dirname, '../uploads', optimizedFileName);
-
-    // Optimize image
-    await sharp(filePath)
-      .resize(1200, 800, { fit: 'inside', withoutEnlargement: true })
-      .jpeg({ quality: 85 })
-      .toFile(optimizedFilePath);
-
-    // Delete original file
-    fs.unlinkSync(filePath);
-
-    const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
-    const imageUrl = `${baseUrl}/uploads/${optimizedFileName}`;
+    const result = await imageUploadService.uploadProjectImage(req.file, {
+      width: 1200,
+      height: 800,
+      quality: 85
+    });
 
     res.status(201).json({
       success: true,
-      imageUrl: imageUrl,
-      message: 'Image uploaded successfully'
+      imageUrl: result.imageUrl,
+      provider: result.provider,
+      message: `Image uploaded successfully using ${result.provider}`,
+      ...(result.publicId && { publicId: result.publicId })
     });
   } catch (error) {
     console.error('Upload error:', error);
-    if (req.file) {
+    if (req.file && fs.existsSync(req.file.path)) {
       try {
         fs.unlinkSync(req.file.path);
       } catch (unlinkError) {
@@ -56,7 +40,7 @@ export const uploadProjectImage = async (req, res) => {
   }
 };
 
-// Upload avatar image (for testimonials)
+// Upload avatar image
 export const uploadAvatar = async (req, res) => {
   try {
     if (!req.file) {
@@ -66,32 +50,22 @@ export const uploadAvatar = async (req, res) => {
       });
     }
 
-    const file = req.file;
-    const filePath = file.path;
-    const fileExt = path.extname(file.originalname);
-    const optimizedFileName = `avatar-${uuidv4()}${fileExt}`;
-    const optimizedFilePath = path.join(__dirname, '../uploads', optimizedFileName);
-
-    // Optimize image - resize to 200x200 for avatar
-    await sharp(filePath)
-      .resize(200, 200, { fit: 'cover' })
-      .jpeg({ quality: 85 })
-      .toFile(optimizedFilePath);
-
-    // Delete original file
-    fs.unlinkSync(filePath);
-
-    const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
-    const imageUrl = `${baseUrl}/uploads/${optimizedFileName}`;
+    const result = await imageUploadService.uploadAvatar(req.file, {
+      width: 200,
+      height: 200,
+      quality: 85
+    });
 
     res.status(201).json({
       success: true,
-      imageUrl: imageUrl,
-      message: 'Avatar uploaded successfully'
+      imageUrl: result.imageUrl,
+      provider: result.provider,
+      message: `Avatar uploaded successfully using ${result.provider}`,
+      ...(result.publicId && { publicId: result.publicId })
     });
   } catch (error) {
     console.error('Avatar upload error:', error);
-    if (req.file) {
+    if (req.file && fs.existsSync(req.file.path)) {
       try {
         fs.unlinkSync(req.file.path);
       } catch (unlinkError) {
@@ -109,28 +83,28 @@ export const uploadAvatar = async (req, res) => {
 export const deleteImage = async (req, res) => {
   try {
     const { filename } = req.params;
+    const { provider = 'local' } = req.query;
     
     if (!filename) {
       return res.status(400).json({
         success: false,
-        error: 'Filename is required'
+        error: 'Filename or publicId is required'
       });
     }
 
-    const filePath = path.join(__dirname, '../uploads', filename);
+    const result = await imageUploadService.deleteImage(filename, provider);
 
-    if (!fs.existsSync(filePath)) {
+    if (!result.success) {
       return res.status(404).json({
         success: false,
-        error: 'File not found'
+        error: result.error || 'Failed to delete image'
       });
     }
-
-    fs.unlinkSync(filePath);
 
     res.json({
       success: true,
-      message: 'Image deleted successfully'
+      message: result.message,
+      provider: result.provider
     });
   } catch (error) {
     console.error('Delete image error:', error);
@@ -139,4 +113,12 @@ export const deleteImage = async (req, res) => {
       error: 'Failed to delete image'
     });
   }
+};
+
+// Get upload configuration
+export const getUploadConfig = async (req, res) => {
+  res.json({
+    success: true,
+    config: imageUploadService.getUploadMethod()
+  });
 };
