@@ -1,98 +1,360 @@
 export const emailTemplates = {
-  welcome: (data) => ({
-    subject: '🎉 Welcome to DevPortfolio!',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Welcome to DevPortfolio</title>
-        <style>
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; line-height: 1.6; }
-          .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-          .header { background: linear-gradient(135deg, #2563eb, #7c3aed); padding: 40px 30px; text-align: center; }
-          .header h1 { color: white; font-size: 32px; margin-bottom: 10px; }
-          .content { padding: 40px 30px; }
-          .content h2 { color: #1f2937; margin-bottom: 20px; font-size: 24px; }
-          .content p { color: #4b5563; margin-bottom: 15px; }
-          .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 30px 0; }
-          .feature { text-align: center; padding: 20px; background: #f9fafb; border-radius: 12px; }
-          .feature span { font-size: 32px; display: block; margin-bottom: 10px; }
-          .feature h4 { color: #1f2937; margin-bottom: 5px; }
-          .feature p { color: #6b7280; font-size: 14px; margin: 0; }
-          .button { display: inline-block; background: #2563eb; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 500; margin-top: 30px; transition: background 0.3s; }
-          .button:hover { background: #1d4ed8; }
-          .footer { background: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb; }
-          .footer p { color: #6b7280; font-size: 14px; margin: 5px 0; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🚀 Welcome to DevPortfolio!</h1>
+welcome: (data) => ({
+  subject: '✨Welcome to Moges Shitaw Portfolio',
+  html: `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Welcome to Moges Shitaw Portfolio</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          line-height: 1.6;
+          padding: 20px;
+        }
+        .container { 
+          max-width: 600px; 
+          margin: 0 auto; 
+          background: white; 
+          border-radius: 20px; 
+          overflow: hidden; 
+          box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .header { 
+          background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+          padding: 50px 30px; 
+          text-align: center;
+          position: relative;
+        }
+        .header::before {
+          content: '</>';
+          position: absolute;
+          bottom: 20px;
+          right: 30px;
+          font-size: 60px;
+          opacity: 0.1;
+          color: white;
+          font-family: monospace;
+        }
+        .profile-icon {
+          width: 80px;
+          height: 80px;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 20px;
+          font-size: 40px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .header h1 { 
+          color: white; 
+          font-size: 28px; 
+          margin-bottom: 10px;
+          font-weight: 700;
+        }
+        .header p {
+          color: rgba(255,255,255,0.9);
+          font-size: 16px;
+        }
+        .content { 
+          padding: 40px 35px; 
+          background: white;
+        }
+        .greeting {
+          font-size: 24px;
+          color: #1e3c72;
+          margin-bottom: 20px;
+          font-weight: 600;
+        }
+        .intro {
+          background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+          padding: 25px;
+          border-radius: 15px;
+          margin: 20px 0;
+          text-align: center;
+        }
+        .intro h3 {
+          color: #1e3c72;
+          margin-bottom: 10px;
+        }
+        .skills {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin: 20px 0;
+          justify-content: center;
+        }
+        .skill-tag {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+          padding: 5px 15px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 500;
+        }
+        .services {
+          background: #f8f9fa;
+          padding: 25px;
+          border-radius: 15px;
+          margin: 25px 0;
+        }
+        .service-item {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          padding: 12px 0;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        .service-item:last-child {
+          border-bottom: none;
+        }
+        .service-icon {
+          width: 40px;
+          height: 40px;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+        }
+        .service-text {
+          flex: 1;
+        }
+        .service-text h4 {
+          color: #1e3c72;
+          margin-bottom: 5px;
+        }
+        .service-text p {
+          color: #6b7280;
+          font-size: 14px;
+        }
+        .cta-button {
+          display: inline-block;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+          padding: 14px 35px;
+          text-decoration: none;
+          border-radius: 50px;
+          font-weight: 600;
+          margin: 20px 0;
+          transition: transform 0.3s, box-shadow 0.3s;
+          text-align: center;
+        }
+        .cta-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(102,126,234,0.4);
+        }
+        .contact-info {
+          background: linear-gradient(135deg, #1e3c72, #2a5298);
+          color: white;
+          padding: 30px;
+          border-radius: 15px;
+          text-align: center;
+          margin: 25px 0;
+        }
+        .contact-info h3 {
+          margin-bottom: 15px;
+        }
+        .contact-details {
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+          flex-wrap: wrap;
+          margin: 20px 0;
+        }
+        .contact-details a {
+          color: white;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(255,255,255,0.2);
+          padding: 8px 16px;
+          border-radius: 25px;
+          transition: background 0.3s;
+        }
+        .contact-details a:hover {
+          background: rgba(255,255,255,0.3);
+        }
+        .footer {
+          background: #f8f9fa;
+          padding: 30px;
+          text-align: center;
+          border-top: 1px solid #e5e7eb;
+        }
+        .footer p {
+          color: #6b7280;
+          font-size: 12px;
+          margin: 5px 0;
+        }
+        .social-links {
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          margin: 15px 0;
+        }
+        .social-links a {
+          color: #667eea;
+          text-decoration: none;
+          font-size: 20px;
+        }
+        @media (max-width: 480px) {
+          .content { padding: 25px 20px; }
+          .greeting { font-size: 20px; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <div class="profile-icon">
+            👨‍💻
           </div>
-          <div class="content">
-            <h2>Hello ${data.userName},</h2>
-            <p>We're absolutely thrilled to have you join our community of developers and creators! 🎉</p>
+          <h1>Welcome to My Digital Space! 🚀</h1>
+          <p>Full Stack Developer | Problem Solver | Tech Enthusiast</p>
+        </div>
+        
+        <div class="content">
+          <div class="greeting">
+            Welcome , ${data.userName || 'Friend'}! 👋
+          </div>
+          
+          <div class="intro">
+            <h3>💡 About Me</h3>
+            <p>I'm <strong>Moges Shitaw</strong>, a passionate Full Stack Developer dedicated to creating innovative web solutions that make a difference. With expertise in modern technologies, I help businesses bring their ideas to life.</p>
+            <div class="skills">
+              <span class="skill-tag">React</span>
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">Next.js</span>
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">PostgreSQL</span>
+            </div>
+          </div>
+          
+          <div class="services">
+            <h3 style="text-align: center; margin-bottom: 20px; color: #1e3c72;">✨ What I Offer</h3>
             
-            <div class="features">
-              <div class="feature">
-                <span>📊</span>
-                <h4>Showcase Projects</h4>
-                <p>Display your best work</p>
-              </div>
-              <div class="feature">
-                <span>💬</span>
-                <h4>Real-time Chat</h4>
-                <p>Connect with clients</p>
-              </div>
-              <div class="feature">
-                <span>📁</span>
-                <h4>File Sharing</h4>
-                <p>Share securely</p>
-              </div>
-              <div class="feature">
-                <span>📈</span>
-                <h4>Track Progress</h4>
-                <p>Monitor engagement</p>
+            <div class="service-item">
+              <div class="service-icon">🌐</div>
+              <div class="service-text">
+                <h4>Full Stack Development</h4>
+                <p>End-to-end web applications using modern technologies</p>
               </div>
             </div>
-
-            <p>Here's what you can do next:</p>
-            <ul style="color: #4b5563; margin-left: 20px;">
-              <li>✨ Create your first project</li>
-              <li>🔗 Share your portfolio link</li>
-              <li>💬 Start connecting with clients</li>
-            </ul>
-
-            <div style="text-align: center;">
-              <a href="${process.env.FRONTEND_URL}/projects" class="button">
-                Create Your First Project →
+            
+            <div class="service-item">
+              <div class="service-icon">📱</div>
+              <div class="service-text">
+                <h4>Responsive Design</h4>
+                <p>Mobile-first websites that work on all devices</p>
+              </div>
+            </div>
+            
+            <div class="service-item">
+              <div class="service-icon">⚡</div>
+              <div class="service-text">
+                <h4>Performance Optimization</h4>
+                <p>Fast-loading, SEO-friendly applications</p>
+              </div>
+            </div>
+            
+            <div class="service-item">
+              <div class="service-icon">🔒</div>
+              <div class="service-text">
+                <h4>Secure Solutions</h4>
+                <p>Best security practices for data protection</p>
+              </div>
+            </div>
+          </div>
+          
+          <p style="text-align: center; margin: 20px 0;">
+            Looking for a professional to bring your project to life? <strong>Let's work together!</strong>
+          </p>
+          
+          <div style="text-align: center;">
+            <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/contact" class="cta-button">
+              📩 Hire Me → Let's Discuss Your Project
+            </a>
+          </div>
+          
+          <div class="contact-info">
+            <h3>📞 Get in Touch</h3>
+            <p style="margin-bottom: 15px;">Have a project in mind? Let's bring your ideas to reality!</p>
+            <div class="contact-details">
+              <a href="mailto:mogesshitaw7702@gmail.com">
+                📧 Email Me
+              </a>
+              <a href="https://t.me/moges_shitaw">
+                💬 Telegram
+              </a>
+              <a href="https://github.com/mogesshitaw">
+                💻 GitHub
               </a>
             </div>
           </div>
-          <div class="footer">
-            <p>© ${data.year || new Date().getFullYear()} DevPortfolio. All rights reserved.</p>
-            <p style="font-size: 12px;">If you didn't create this account, please ignore this email.</p>
+          
+          <div style="text-align: center; margin-top: 20px;">
+            <p style="color: #6b7280;">
+              ⭐ Check out my portfolio to see what I've built:<br>
+              <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/myprojects" style="color: #667eea;">
+                View My Work →
+              </a>
+            </p>
           </div>
         </div>
-      </body>
-      </html>
-    `,
-    text: `
-      Welcome to DevPortfolio, ${data.userName}! 🎉
-
-      We're thrilled to have you join our community. Here's what you can do:
-      - Showcase your projects
-      - Connect with clients via real-time chat
-      - Share files securely
-      - Track engagement
-
-      Get started: ${process.env.FRONTEND_URL}/projects
-    `,
-  }),
+        
+        <div class="footer">
+          <div class="social-links">
+            <a href="https://github.com/mogesshitaw">🐙 GitHub</a>
+            <a href="https://linkedin.com/in/moges-shitaw">🔗 LinkedIn</a>
+            <a href="https://t.me/moges_shitaw">📱 Telegram</a>
+          </div>
+          <p>© ${data.year || new Date().getFullYear()} Moges Shitaw | Full Stack Developer</p>
+          <p>Building digital solutions with passion and expertise</p>
+          <p style="font-size: 11px;">
+            You're receiving this email because you signed up on my portfolio.<br>
+            ${process.env.FRONTEND_URL || 'http://localhost:3000'}
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `,
+  text: `
+    ✨ Welcome to Moges Shitaw's Portfolio! ✨
+    
+    Hello ${data.userName || 'Friend'},
+    
+    I'm Moges Shitaw, a Full Stack Developer passionate about creating innovative web solutions.
+    
+    💡 What I Offer:
+    • Full Stack Development (React, Node.js, Next.js)
+    • Responsive Web Design
+    • Performance Optimization
+    • Secure Web Applications
+    
+    🚀 Ready to bring your project to life?
+    Contact me today for a free consultation!
+    
+    📧 Email: mogesshitaw7702@gmail.com
+    💬 Telegram: t.me/moges_shitaw
+    💻 GitHub: github.com/mogesshitaw
+    
+    View my portfolio: ${process.env.FRONTEND_URL || 'http://localhost:3000'}/myprojects
+    Hire me: ${process.env.FRONTEND_URL || 'http://localhost:3000'}/contact
+    
+    ---
+    Moges Shitaw | Full Stack Developer
+    Building digital solutions with passion and expertise
+  `,
+}),
 
   projectCreated: (data) => ({
     subject: `🎯 Project Created: ${data.projectTitle}`,

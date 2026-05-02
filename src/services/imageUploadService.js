@@ -46,9 +46,6 @@ const isCloudinaryConfigured = () => {
         api_secret: apiSecret,
       });
       console.log('✅ Cloudinary configured successfully');
-      
-      // Test the configuration
-      console.log('🔍 Testing Cloudinary connection...');
     } catch (configError) {
       console.error('❌ Failed to configure Cloudinary:', configError.message);
       return false;
@@ -94,6 +91,38 @@ class ImageUploadService {
         height,
         quality,
         fit: 'inside'
+      });
+    }
+  }
+
+  // 🔴 ADD THIS METHOD - uploadAvatar
+  async uploadAvatar(file, options = {}) {
+    const { 
+      width = 200, 
+      height = 200, 
+      quality = 85,
+      folder = 'portfolio/avatars'
+    } = options;
+
+    console.log(`📤 Uploading avatar image: ${file.originalname}`);
+    console.log(`   Using: ${USE_CLOUDINARY ? 'Cloudinary' : 'Local'}`);
+
+    if (USE_CLOUDINARY) {
+      return this.uploadToCloudinary(file, {
+        folder,
+        width,
+        height,
+        quality,
+        crop: 'fill',
+        gravity: 'face'
+      });
+    } else {
+      return this.uploadToLocal(file, {
+        type: 'avatar',
+        width,
+        height,
+        quality,
+        fit: 'cover'
       });
     }
   }
@@ -212,6 +241,41 @@ class ImageUploadService {
     }
   }
 
+  async deleteImage(identifier, provider = 'local') {
+    try {
+      if (provider === 'cloudinary' && USE_CLOUDINARY && cloudinary) {
+        console.log(`🗑️ Deleting from Cloudinary: ${identifier}`);
+        const result = await cloudinary.uploader.destroy(identifier);
+        return {
+          success: result.result === 'ok',
+          provider: 'cloudinary',
+          message: result.result === 'ok' ? 'Deleted from Cloudinary' : 'Deletion failed'
+        };
+      } else {
+        const filePath = path.join(__dirname, '../uploads', identifier);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+          console.log(`🗑️ Deleted local file: ${identifier}`);
+          return {
+            success: true,
+            provider: 'local',
+            message: 'Deleted from local storage'
+          };
+        }
+        return {
+          success: false,
+          error: 'File not found'
+        };
+      }
+    } catch (error) {
+      console.error('❌ Delete error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
   getUploadMethod() {
     return {
       useCloudinary: USE_CLOUDINARY,
@@ -225,4 +289,6 @@ class ImageUploadService {
   }
 }
 
-export default new ImageUploadService();
+// Create instance and export
+const imageUploadService = new ImageUploadService();
+export default imageUploadService;
