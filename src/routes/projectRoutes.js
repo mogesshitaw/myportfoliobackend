@@ -11,21 +11,23 @@ import {
   getProjectStats,
   getUserProjects,
   getProjectComments,
-  getAllfeaturedProjects
+  getAllfeaturedProjects,
+  getAllProjectwithouttoken
 } from "../controllers/projectController.js"
 import { authenticate } from "../middleware/auth.js"
 
 const router = Router()
 
-// Public routes
-router.get("/", getAllProjects)
 router.get("/featured",getAllfeaturedProjects)
+router.get("/notoken",getAllProjectwithouttoken);
+
+// Public routes
+router.use(authenticate)
+router.get("/", getAllProjects)
 router.get("/stats", getProjectStats)
 router.get("/:id", getProjectById)
 
 // Protected routes (require authentication)
-router.use(authenticate)
-
 // User's own projects
 router.get("/user/me", getUserProjects)
 

@@ -10,7 +10,7 @@ const __dirname = dirname(__filename)
 export const getAllfeaturedProjects = async (req, res) => {
   try {
     const projects = await prisma.project.findMany({
-      where: { status: "active" ,featured:true},
+      where: { status: "active" , featured:true},
       include: {
         user: {
           select: {
@@ -61,7 +61,7 @@ export const getAllfeaturedProjects = async (req, res) => {
 }
 
 // Get all projects (public)
-export const getAllProjects = async (req, res) => {
+export const getAllProjectwithouttoken= async (req, res) => {
   try {
     const projects = await prisma.project.findMany({
       where: { status: "active" },
@@ -113,6 +113,87 @@ export const getAllProjects = async (req, res) => {
     })
   }
 }
+export const getAllProjects = async (req, res) => {
+  try {
+    // Get current user ID from auth middleware
+    const currentUserId = req.user?.id; // Make sure your auth middleware sets this
+            console.log("curent user id", currentUserId);
+
+    const projects = await prisma.project.findMany({
+      where: { status: "active" },
+      include: {
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                fullName: true,
+                avatarUrl: true
+              }
+            }
+          },
+          orderBy: { createdAt: "desc" },
+          take: 5
+        },
+        _count: {
+          select: {
+            comments: true,
+            likes: true
+          }
+        }
+      },
+      orderBy: { createdAt: "desc" }
+    });
+    
+    // Add isLiked field for each project
+    const projectsWithLikeStatus = await Promise.all(
+      projects.map(async (project) => {
+        let isLiked = false;
+        if (currentUserId) {
+
+          // Check if current user liked this project
+          const like = await prisma.like.findUnique({
+            where: {
+             projectId_userId:{
+                userId: currentUserId,
+                projectId: project.id
+              }
+            }
+          });
+          isLiked = !!like;
+        }
+        
+        return {
+          ...project,
+          isLiked, // Add this field for frontend
+          likes: undefined // Remove the likes array if included
+        };
+      })
+    );
+
+    res.json({
+      success: true,
+      data: projectsWithLikeStatus
+    });
+  } catch (error) {
+    console.error("Get projects error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch projects"
+    });
+  }
+};
 // Get single project by ID
 export const getProjectById = async (req, res) => {
   try {
