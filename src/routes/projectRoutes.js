@@ -20,12 +20,12 @@ const router = Router()
 
 router.get("/featured",getAllfeaturedProjects)
 router.get("/notoken",getAllProjectwithouttoken);
-
+router.get("/:id", getProjectById)
 // Public routes
 router.use(authenticate)
 router.get("/", getAllProjects)
 router.get("/stats", getProjectStats)
-router.get("/:id", getProjectById)
+
 
 // Protected routes (require authentication)
 // User's own projects
